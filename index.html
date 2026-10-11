@@ -1,1 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Muskaan</title>
+  <!-- Tailwind CSS & Canvas Confetti -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0d0204;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    .heading-font {
+      font-family: 'Cinzel', serif;
+    }
+    .glow-box {
+      background: rgba(25, 10, 15, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 80, 120, 0.25);
+      box-shadow: 0 0 35px rgba(230, 50, 90, 0.2);
+    }
+    .glow-btn {
+      background: linear-gradient(135deg, #e63956, #91122a);
+      box-shadow: 0 0 15px rgba(230, 57, 86, 0.5);
+      transition: all 0.3s ease;
+    }
+    .glow-btn:hover {
+      box-shadow: 0 0 25px rgba(230, 57, 86, 0.8);
+      transform: translateY(-2px);
+    }
+    .pin-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #e63956;
+      transition: background-color 0.2s;
+    }
+    .pin-dot.filled {
+      background-color: #e63956;
+      box-shadow: 0 0 10px #e63956;
+    }
+    /* Custom Scrollbar for Letter */
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #e63956;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 relative">
 
+  <!-- Background Ambient Glow -->
+  <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-rose-900/20 rounded-full blur-[120px]"></div>
+  </div>
+
+  <div class="w-full max-w-md z-10">
+
+    <!-- STEP 1: PASSCODE LOCK SCREEN -->
+    <div id="step-lock" class="glow-box rounded-3xl p-6 text-center">
+      <div class="relative inline-block mb-3">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" 
+             alt="Profile" 
+             class="w-16 h-16 rounded-full object-cover mx-auto border-2 border-rose-500/50 p-1 cursor-pointer"
+             onclick="alert('Hint: Special Year (e.g. 2026)')">
+      </div>
+      <h2 class="heading-font text-xl tracking-widest text-rose-200 uppercase mb-1">LOCKED</h2>
+      <p class="text-xs text-rose-400/80 mb-6">Hint: Click on picture for hint</p>
+
+      <!-- Pin Dots -->
+      <div class="flex justify-center space-x-3 mb-8">
+        <div class="pin-dot" id="dot-0"></div>
+        <div class="pin-dot" id="dot-1"></div>
+        <div class="pin-dot" id="dot-2"></div>
+        <div class="pin-dot" id="dot-3"></div>
+      </div>
+
+      <!-- Keypad -->
+      <div class="grid grid-cols-3 gap-4 px-4 max-w-[280px] mx-auto">
+        <button onclick="pressKey('1')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">1</button>
+        <button onclick="pressKey('2')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">2</button>
+        <button onclick="pressKey('3')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">3</button>
+        <button onclick="pressKey('4')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">4</button>
+        <button onclick="pressKey('5')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">5</button>
+        <button onclick="pressKey('6')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">6</button>
+        <button onclick="pressKey('7')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">7</button>
+        <button onclick="pressKey('8')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">8</button>
+        <button onclick="pressKey('9')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">9</button>
+        <button onclick="clearPin()" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium text-rose-300 transition">CLEAR</button>
+        <button onclick="pressKey('0')" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-lg font-medium text-rose-100 transition">0</button>
+        <button onclick="deleteKey()" class="h-12 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium text-rose-300 transition">⌫</button>
+      </div>
+      <p class="text-[10px] tracking-wider text-rose-300/40 mt-6 uppercase">PASSKEY: 2026</p>
+    </div>
+
+    <!-- STEP 2: LOADING SCREEN -->
+    <div id="step-loading" class="glow-box rounded-3xl p-10 text-center hidden">
+      <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnZ4Yms1NW5xM2VsaHRzeXkwdzE0dzYycGhhbnJsaTFsczNjcmswYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/vFKqnCdLPNOKc/giphy.gif" 
+           alt="Panda Cute GIF" class="w-24 h-24 mx-auto mb-4 object-contain">
+      <h3 class="text-rose-200 text-sm font-medium mb-4">Loading something special...</h3>
+      <div class="w-full bg-rose-950/50 h-2 rounded-full overflow-hidden">
+        <div id="progress-bar" class="bg-gradient-to-r from-rose-500 to-pink-400 h-full w-0 transition-all duration-300"></div>
+      </div>
+      <p class="text-[10px] text-rose-400/60 uppercase tracking-widest mt-4">JUST FOR YOU</p>
+    </div>
+
+    <!-- STEP 3: WELCOME INTRO -->
+    <div id="step-intro" class="glow-box rounded-3xl p-8 text-center hidden">
+      <h1 class="heading-font text-2xl text-rose-100 font-bold mb-6">It's Your Special Day 🌸</h1>
+      <img src="https://media.giphy.com/media/26hpW3l610P0tYF56/giphy.gif" 
+           alt="Cute Anim" class="w-28 h-28 mx-auto mb-6 object-contain">
+      <p class="text-sm text-rose-200/80 mb-8">I made something special just for you, Muskaan...</p>
+      <button onclick="goToStep('step-counter')" class="glow-btn px-8 py-3 rounded-full text-xs font-semibold tracking-wider text-white uppercase">START ✨</button>
+    </div>
+
+    <!-- STEP 4: AGE COUNTER -->
+    <div id="step-counter" class="glow-box rounded-3xl p-8 text-center hidden">
+      <img src="https://media.giphy.com/media/LpDmM2W92M5v05f88i/giphy.gif" 
+           alt="Panda" class="w-20 h-20 mx-auto mb-4 object-contain">
+      <h2 class="heading-font text-xl text-rose-100 mb-6">Happy Birthday My Girl 🎀</h2>
+      <p class="text-xs text-rose-300/70 mb-6">You have completed</p>
+      
+      <div class="grid grid-cols-3 gap-2 mb-8">
+        <div class="bg-rose-950/40 p-3 rounded-2xl border border-rose-500/20">
+          <span class="block text-2xl font-bold text-rose-200 heading-font">19</span>
+          <span class="text-[10px] uppercase text-rose-400">Years</span>
+        </div>
+        <div class="bg-rose-950/40 p-3 rounded-2xl border border-rose-500/20">
+          <span class="block text-2xl font-bold text-rose-200 heading-font">0</span>
+          <span class="text-[10px] uppercase text-rose-400">Months</span>
+        </div>
+        <div class="bg-rose-950/40 p-3 rounded-2xl border border-rose-500/20">
+          <span class="block text-2xl font-bold text-rose-200 heading-font">0</span>
+          <span class="text-[10px] uppercase text-rose-400">Days</span>
+        </div>
+      </div>
+
+      <button onclick="goToStep('step-gallery')" class="glow-btn px-8 py-3 rounded-full text-xs font-semibold tracking-wider text-white uppercase">NEXT ✨</button>
+    </div>
+
+    <!-- STEP 5: PHOTO MEMORIES -->
+    <div id="step-gallery" class="glow-box rounded-3xl p-6 text-center hidden">
+      <h2 class="heading-font text-lg text-rose-100 mb-1">Special Memories</h2>
+      <p class="text-xs text-rose-400/80 mb-6">Swipe / Click for more</p>
+
+      <!-- Image Carousel -->
+      <div class="relative w-full h-64 mb-6 rounded-2xl overflow-hidden border border-rose-500/30">
+        <img id="gallery-img" 
+             src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" 
+             class="w-full h-full object-cover transition-opacity duration-500" alt="Memory">
+      </div>
+
+      <div class="flex justify-between items-center px-4">
+        <button onclick="prevImage()" class="text-xs text-rose-300 hover:text-white">← Previous</button>
+        <button onclick="nextImage()" class="text-xs text-rose-300 hover:text-white">Next →</button>
+      </div>
+
+      <button onclick="goToStep('step-letter')" class="glow-btn mt-6 w-full py-3 rounded-full text-xs font-semibold tracking-wider text-white uppercase">💌 SEE MESSAGE</button>
+    </div>
+
+    <!-- STEP 6: LETTER ENVELOPE -->
+    <div id="step-letter" class="glow-box rounded-3xl p-8 text-center hidden">
+      <h2 class="heading-font text-xl text-rose-100 mb-2">A Letter, Just For You</h2>
+      <p class="text-xs text-rose-400/80 mb-8">Tap the envelope to open your message...</p>
+
+      <div onclick="openLetterModal()" class="cursor-pointer bg-rose-950/60 border border-rose-500/30 hover:border-rose-500 p-8 rounded-2xl transition-all duration-300 group max-w-[200px] mx-auto mb-6">
+        <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">💌</div>
+        <span class="text-xs text-rose-200 tracking-wider uppercase font-medium">TAP TO OPEN</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LETTER MODAL POPUP -->
+  <div id="letter-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glow-box max-w-md w-full rounded-3xl p-6 relative">
+      <button onclick="closeLetterModal()" class="absolute top-4 right-4 text-rose-400 hover:text-white text-lg">✕</button>
+      
+      <div class="text-center mb-4">
+        <h3 class="heading-font text-lg text-rose-100">JUST FOR YOU ✨</h3>
+        <p class="text-[10px] text-rose-400 uppercase tracking-widest">From my heart to yours</p>
+      </div>
+
+      <div class="custom-scroll max-h-60 overflow-y-auto text-xs text-rose-100/90 leading-relaxed text-left space-y-3 pr-2 mb-6">
+        <p class="font-semibold text-rose-200">Happy Birthday, Muskaan ❤️</p>
+        <p>You are the most beautiful part of my life, and I am so lucky to have you. Your smile makes my days better, and your presence makes everything feel special.</p>
+        <p>I hope your birthday is filled with happiness, love, and endless smiles. Always stay happy — because your happiness means the world to me!</p>
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="triggerConfetti()" class="glow-btn flex-1 py-3 rounded-xl text-xs font-semibold text-white uppercase">CELEBRATE 🎉</button>
+        <button onclick="restartApp()" class="bg-white/5 hover:bg-white/10 border border-rose-500/20 text-rose-200 px-4 py-3 rounded-xl text-xs font-semibold uppercase">RESTART 🔄</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Passcode Logic
+    const CORRECT_PIN = "2026";
+    let currentPin = "";
+
+    function updateDots() {
+      for (let i = 0; i < 4; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (i < currentPin.length) {
+          dot.classList.add('filled');
+        } else {
+          dot.classList.remove('filled');
+        }
+      }
+    }
+
+    function pressKey(num) {
+      if (currentPin.length < 4) {
+        currentPin += num;
+        updateDots();
+        if (currentPin.length === 4) {
+          setTimeout(checkPin, 200);
+        }
+      }
+    }
+
+    function deleteKey() {
+      currentPin = currentPin.slice(0, -1);
+      updateDots();
+    }
+
+    function clearPin() {
+      currentPin = "";
+      updateDots();
+    }
+
+    function checkPin() {
+      if (currentPin === CORRECT_PIN) {
+        startLoading();
+      } else {
+        alert("Incorrect Pin! Try 2026");
+        clearPin();
+      }
+    }
+
+    // Step Navigation
+    function goToStep(stepId) {
+      const steps = ['step-lock', 'step-loading', 'step-intro', 'step-counter', 'step-gallery', 'step-letter'];
+      steps.forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(stepId).classList.remove('hidden');
+    }
+
+    // Loading Animation
+    function startLoading() {
+      goToStep('step-loading');
+      let progress = 0;
+      const bar = document.getElementById('progress-bar');
+      const interval = setInterval(() => {
+        progress += 10;
+        bar.style.width = progress + '%';
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => goToStep('step-intro'), 400);
+        }
+      }, 150);
+    }
+
+    // Photo Gallery Logic
+    const images = [
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80",
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=500&q=80",
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80"
+    ];
+    let imgIdx = 0;
+
+    function nextImage() {
+      imgIdx = (imgIdx + 1) % images.length;
+      document.getElementById('gallery-img').src = images[imgIdx];
+    }
+
+    function prevImage() {
+      imgIdx = (imgIdx - 1 + images.length) % images.length;
+      document.getElementById('gallery-img').src = images[imgIdx];
+    }
+
+    // Letter Modal
+    function openLetterModal() {
+      document.getElementById('letter-modal').classList.remove('hidden');
+      triggerConfetti();
+    }
+
+    function closeLetterModal() {
+      document.getElementById('letter-modal').classList.add('hidden');
+    }
+
+    // Confetti Effect
+    function triggerConfetti() {
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#e63956', '#ffb6c1', '#ffffff']
+      });
+    }
+
+    function restartApp() {
+      closeLetterModal();
+      clearPin();
+      goToStep('step-lock');
+    }
+  </script>
+</body>
+</html>
